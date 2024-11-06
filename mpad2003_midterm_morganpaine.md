@@ -24,11 +24,14 @@ And to create an unordered list, we simply put a star (`*`) before each item.
 
 ## 1. Introduction
 
-Insert text here.
+For this assignment, I am tasked with performing an Exploratory Data Analysis on a condensed version of a dataset titled "2024 Service Requests" from The City of Ottawa's Website. 
+I will be focusing on the month of August. 
 
 ## 2. Getting Data
 
-Use two hashtag symbols (`##`) to create a level 2 heading like this one.
+To import this dataset into Google Sheets, I first began by downloading it to my desktop and importing the data into a blank sheet. To do this, I first opened the file provided, I then downloaded this file to my "Downloads" folder. Following this, I opened a new spreadsheet on Google Sheets and clicked "File" then "Import". I then went to the "Upload" subhead and I was able to insert this file. For import location, I had "Replace spreadsheet", and for separator type I had "Comma" because the filetype is .csv (comma separated values). 
+Now: This is what my spreadsheet looks like right after importation:
+
 
 ## heading!
 
