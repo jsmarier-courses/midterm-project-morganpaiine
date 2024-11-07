@@ -69,19 +69,43 @@ This also shows how to create an ordered list. Simply put `1.` before each item.
 
 VIMO analysis is a great tool for futher understanding of any given dataset. The acronym stands for: Valid, Invalid, Missing, Outliers. 
 
-Support your claims by citing relevant sources. Please follow [APA guidelines for in-text citations](https://apastyle.apa.org/style-grammar-guidelines/citations).
+VIMO analysis is a great tool for further understanding of any given dataset. The acronym stands for: Valid, Invalid, Missing, Outliers.
 
-**For example:**
+Valid:
+The columns "Status" and "Channel" contain valid, consistent values. "Status" has only "Resolved," "Active," and "Cancelled,". "Channel" column has valid categories like "Dispatch," "Walk-In," etc.
+Overall, most values seem valid.
+Invalid:
+Using a pivot table, I found that there are 2 \N values in the “Type” column. This is odd as every other value seems to be placed in a specific type. This value can be seen as missing or invalid. 
+Missing:
+There are 3,020 missing values in the "Closed_Date" column and 1,549 in the "Ward" column. These might indicate unresolved cases or cases without specific ward data, so we could flag or remove them depending on their relevance. 
+Outliers:
+I was unable to find any outliers in this dataset. 
 
-As Cairo (2016) argues, a data visualization should be truthful...
 
 ### 3.2. Cleaning Data
 
-Insert text here.
+To begin, I froze the first row of the dataset in order to assert that it shows the titles of the data shown below. I also bolded the text of this row and added a dark grey background to make it more distinct and readable.
+INSERT PHOTO
+I also deleted four columns that are not required for my data analysis (longitude, latitude, address, service request number). 
+
+I added white space in between all of the columns by double clicking the square in the top left corner of the dataset in order to view all of the text. 
+I used the SPLIT function to remove the french half of the headings considering that I did not need this in order to complete my analysis. 
+INSERT PHOTO
+
 
 ### 3.3. Exploratory Data Analysis (EDA)
 
-Insert text here.
+For the exploratory data analysis, I began by creating a pivot table with the following settings: rows- ward ascending, columns -Status ascending, and values - type COUNTA. This was able to show me the amount of service request per ward listed into active, cancelled, and resolved. 
+I chose those variables because I was interested in seeing the contrast between wards and exploring the difference in complete requests. 
+This chart can be shown below:
+INSERT CHART WITH NUMBERS
+I noticed that while this shows me exact data of what I was looking for, I wanted a version that was easier to understand, making understanding the data quicker and more accessible. That’s when I thought of using % instead of default in the ‘show as’ section. Once I changed this to ‘% of row’ I was much happier with the table as I was able to really see who was leading in resolved service requests as a percentage, rather than a value, which is a much better comparison for this data story. See the new chart below:
+INSERT CHART WITH PERCENTAGES
+For the chart, this is where I found myself struggling. I wanted to make something that was a clear representation of the variance of incomplete requests per ward. The axis is where the problem lies. If I were to include all three series (Complete, Ongoing, Cancelled) the product would look completely unreadable with the “Complete” category taking up the majority of space. 
+
+While viewing both the dataset and the chart, I noticed that while there are no extreme outliers, there are differences between wards that should be noted. 
+The highest incomplete comes from Ward BLANK at %, and the lowest incomplete comes from Ward BLANK at %. As I stated earlier, while there are no outright outliers, I find it an important area to cover as that 20% matters to people in our communities. 
+
 
 **This section should include a screen capture of your pivot table, like so:**
 
