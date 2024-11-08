@@ -86,7 +86,7 @@ Using a pivot table, I found that there are 2 \N values in the “Type” column
 
 
 Missing:
-There are  missing values in the "Closed_Date" column and 1,549 in the "Ward" column. 
+There are 3,020 missing values in the "Closed_Date" column and 1,549 in the "Ward" column. 
 
 The way I discoved this was by using the `COUNTIF` function in Sheets. For example, below is the equation I used to calculate the amount of times value "\N" appears in the "Ward" column:
 ``` r
