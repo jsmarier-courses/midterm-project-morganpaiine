@@ -16,7 +16,7 @@ The method of obtaining the data is as follows:
 - 311 Email
 - Web-Based Self Service Portal
 
-Regarding how the data is presented, it is on a spreadsheet that holds columns for each section of a service request:
+Regarding how the data is presented, it is on a spreadsheet that holds columns for each piece of information of a service request, shown below:
 - Service Request ID Number
 - Status
 - Desc. of Request
@@ -58,7 +58,7 @@ Now: This is what my spreadsheet looks like right after importation:
 There are 11 columns and 28536 rows. The data itself does not look clean and the spreadsheet is essentially unreadable. For example, the top row, holding the headings disappears as you scroll down, data is unaligned within their columns adding to the unreadability. Another example is the lack of whitespace in the columns which is cutting off the text in the cells. The spreadsheet also holds columns that are mainly empty and unuseful minus a few values (longitude, latitude). 
 
 
-Making more specific observations, I noticed that column “B” is made up of nominal values, showing if a service request has been resolved, cancelled, or active. I also noticed columns “E”and “F”  consist of ordinal variables. They show the date that requests were opened and closed (if applicable). Also, column “J” is made up of nominal variables, showing ward numbers that these requests were made in. 
+Making more specific observations, I noticed that column “B” is made up of nominal values, showing if a service request has been resolved, cancelled, or active. Nominal Variables can be decribed as "A nominal variable is one that describes a name, label or category without natural order" (Government of Canada, 2021). I also noticed columns “E” and “F”  consist of ordinal variables. They show the date that requests were opened and closed (if applicable). Also, column “J” is made up of nominal variables, showing ward numbers that these requests were made in. 
 
 
 A question I would love to ask is: Which ward holds the most active service requests, and why? What are the factors that could play into this? 
@@ -75,10 +75,27 @@ VIMO analysis is a great tool for further understanding of any given dataset. Th
 Valid:
 The columns "Status" and "Channel" contain valid, consistent values. "Status" has only "Resolved," "Active," and "Cancelled,". "Channel" column has valid categories like "Dispatch," "Walk-In," etc.
 Overall, most values seem valid.
+
+
 Invalid:
+I was having a difficult time finding invalid variables, so I turned to pivot tables. While my methodology might have not been the most efficient, I began messing around with each column looking at amount of different values per column. This is where I found something interesting. 
 Using a pivot table, I found that there are 2 \N values in the “Type” column. This is odd as every other value seems to be placed in a specific type. This value can be seen as missing or invalid. 
+
+![](Missing-Vals-Type.png)<br>
+*Figure 2: Pivot table showing 2 /N values in Type Column*
+
+
 Missing:
-There are 3,020 missing values in the "Closed_Date" column and 1,549 in the "Ward" column. These might indicate unresolved cases or cases without specific ward data, so we could flag or remove them depending on their relevance. 
+There are  missing values in the "Closed_Date" column and 1,549 in the "Ward" column. 
+
+The way I discoved this was by using the `COUNTIF` function in Sheets. For example, below is the equation I used to calculate the amount of times value "\N" appears in the "Ward" column:
+``` r
+=COUNTIF(E:E, "\N")
+```
+
+These might indicate unresolved cases or cases without specific ward data, so we could flag or remove them depending on their relevance. 
+
+
 Outliers:
 I was unable to find any obvious outliers in this dataset. 
 
@@ -88,7 +105,7 @@ I find this dataset to be generally reliable, considering where it came from, an
 
 To begin, I froze the first row of the dataset in order to assert that it shows the titles of the data shown below. I also bolded the text of this row and added a dark grey background to make it more distinct and readable.
 ![](Freeze-top-row.png)<br>
-*Figure 2: Showing path to successfully freezing a row.*
+*Figure 3: Showing path to successfully freezing a row.*
 
 I also deleted four columns that are not required for my data analysis (longitude, latitude, address, service request number). 
 
@@ -97,7 +114,7 @@ I added white space in between all of the columns by double clicking the square 
 In order to remove the french side of the description in the top row, I did some research. The `SPLIT` function could have worked in this case, but I figured it would not be the best method. After looking up a solution, I came across the [Geeks for Geeks Wesbite](https://www.geeksforgeeks.org/how-to-remove-text-before-or-after-a-specific-character-in-excel/). 
 This introduced a few equations for me, but the one I ended up using was the `LEFT` function. Essentially, this function searches for a given character in a given cell, then proceeds to remove everything to the left of it including the character. Below I have included an image of the row I added to implement the equation, and the equation without the `LEFT` function applied.
 ![](LEFT-function.png)<br>
-*Figure 3: Rows A and B before and after LEFT function.*
+*Figure 4: Rows A and B before and after LEFT function.*
 
 The equation I used is as follows:
 ``` r
@@ -106,12 +123,12 @@ The equation I used is as follows:
 After this I had to delete the row with the english and french descriptions.
 To do this I had to copy the row with the results and and paste as special values. This will paste the result without causing an error when I delete the cells needed to equate the result.
 ![](Paste-as-Special.png)<br>
-*Figure 4: Pasting results as special values*
+*Figure 5: Pasting results as special values*
 
 
 This image below shows my dataset after the cleaning process.
 ![](Data-After-Cleaning.png)<br>
-*Figure 5: Dataset After Cleaning*
+*Figure 6: Dataset After Cleaning*
 
 
 ### 3.3. Exploratory Data Analysis (EDA)
@@ -120,22 +137,25 @@ For the exploratory data analysis, I began by creating a pivot table with the fo
 I chose those variables because I was interested in seeing the contrast between wards and exploring the difference in complete requests. 
 This chart can be shown below:
 ![](Pivot-with-numbers.png)<br>
-*Figure 6: Showing a Pivot Table with the values being in numbers*
+*Figure 7: Showing a Pivot Table with the values being in numbers*
+
 I noticed that while this shows me exact data of what I was looking for, I wanted a version that was easier to understand, making understanding the data quicker and more accessible. That’s when I thought of using % instead of default in the ‘show as’ section. Once I changed this to ‘% of row’ I was much happier with the table as I was able to really see who was leading in resolved service requests as a percentage, rather than a value, which is a much better comparison for this data story. See the new chart below:
+
 ![](Pivot-with-percent.png)<br>
-*Figure 7: Pivot table after converting to percentages.*
+*Figure 8: Pivot table after converting to percentages.*
+
 For the chart, this is where I found myself struggling. I wanted to make something that was a clear representation of the variance of incomplete requests per ward. The axis is where the problem lies. If I were to include all three series (Resolved, Active, Cancelled) the product would look completely unreadable with the “Resolved” category taking up the majority of space. 
 
 To solve this, I decided to only include Active and Cancelled as series. This created a chart where the Y-axis has room to show a more understandable picture. I find this chart is readable and even though "Complete" is not present, I believe it is implied and this directs the charts focus to the part of the data I want to focus on: the unresolved cases. 
 
 The chart I decided on is found here:
 ![](Exploratory-Chart.png)<br>
-*Figure 8: Exploratory Chart showing percentages of incomplete requests per ward.*
+*Figure 9: Exploratory Chart showing percentages of incomplete requests per ward.*
 
 I decided on a stacked column chart because as stated in chapter 5 section 5.2 of 'Power from Data!' "The stacked bar chart is a preliminary data analysis tool used to show segments of totals" (Government of Canada, 2021). This is what I wanted to achieve by showing both cancelled and ongoing requests as seperate division of a whole (incomplete requests).
 
 While viewing both the dataset and the chart, I noticed that while there are no extreme outliers, there are differences between wards that should be noted. 
-The highest active comes from ward-less request at 21.17%, and the lowest incomplete comes from Ward 3 at 5.95%. Realizing that the ward-less requests being the highest may make sense considering they may be much larger issues that need inter-city collaboration. Ward 3's percentage is very low considering the average active cases per ward, in percentages, is: 10.44%
+The highest active comes from ward-less request at 21.17%, and the lowest incomplete comes from Ward 3 at 5.95%. Realizing that the ward-less requests being the highest may make sense considering they may be much larger issues that need inter-city collaboration. Ward 18 shows the highest percentage of unresolved cases within a certain ward (15.92%). Ward 3's percentage is very low considering the average active cases per ward, in percentages, is: 10.44%
 The equation I used to find this can be found here:
 
 ``` r
@@ -152,20 +172,29 @@ A potential story within this dataset could be created by focusing on the incomp
 To tell this story, I could first display this data through readable charts, with a further description as to where the lack of fulfilment is. 
 I could interview the representatives of wards that have a high fulfilment rate and also ones who have a low fulfilment rate. They would be able to possibly shed light on the why. I could also interview citizens who had filled out reports and follow up on their experiences depending on if it has been fulfilled or not.  This could provide a contrasted perspective in order to show a well-rounded story that will educate the public and possibly inspire public service workers. 
 
+I could also looks into which types of complaints are most common in which wards, and use this as a further point to analyze the 'why'. 
+Doing some research, I came across this news story of a particular ward expressing a much higher rate of complaints regarding rats (Ottawa CTV News, 2024). This could be a great starting point into my story.
+
 
 ## 5. Conclusion
 
-The most challenging part(s) of this assignment for me were the VIMO analysis and the cleaning of the dataset. I had a hard time finding outliers and I found myself getting frustrated at times, but this taught me to proceed with my analytical skills even if they are still improving. As for the cleaning of the dataset, at first I was nervous to alter the dataset in any way for fear of losing ‘valuable’ information. 
+The most challenging part(s) of this assignment for me were the VIMO analysis and the cleaning of the dataset. I had a hard time finding outliers and I found myself getting frustrated at times, but this taught me to proceed with my analytical skills even if they are still improving. As for the cleaning of the dataset, at first I was nervous to alter the dataset in any way for fear of losing ‘valuable’ information. I sometimes struggle with worries of missing perfection, and that got in my way during this assignment. Once I was able to let go of that, I found this whole assignment much easier. 
+
 The most rewarding aspect of this assignment was the lightbulb moment I had when I had cleaned my dataset, and knew which story I wanted to follow. Seeing the pivot table supply what I was looking for and being able to brainstorm this story using charts, further pivot tables etc. I found myself thoroughly enjoying this part of the process. 
 
 
 
 ## 6. References
 
-Include a list of your references here. Please follow [APA guidelines for references](https://apastyle.apa.org/style-grammar-guidelines/references). Hanging paragraphs aren't required though.
 
-**Here's an example:**
+Government of Canada, S. C. (2021a, September 2). *4 data exploration 4.2 types of variables. 4.2 Types of variables.* https://www150.statcan.gc.ca/n1/edu/power-pouvoir/ch8/5214817-eng.htm 
 
-Bounegru, L., & Gray, J. (Eds.). (2021). *The Data Journalism Handbook 2: Towards A Critical Data Practice*. Amsterdam University Press. [https://ocul-crl.primo.exlibrisgroup.com/permalink/01OCUL_CRL/hgdufh/alma991022890087305153](https://ocul-crl.primo.exlibrisgroup.com/permalink/01OCUL_CRL/hgdufh/alma991022890087305153)
 
-Government of Canada, S. C. (2021, September 2). 5 Data Visualization 5.2 Bar Chart. 5.2 Bar chart. https://www150.statcan.gc.ca/n1/edu/power-pouvoir/ch9/bargraph-diagrammeabarres/5214818-eng.htm 
+Government of Canada, S. C. (2021, September 2). *5 Data Visualization 5.2 Bar Chart. 5.2 Bar chart.* 
+https://www150.statcan.gc.ca/n1/edu/power-pouvoir/ch9/bargraph-diagrammeabarres/5214818-eng.htm
+
+
+GeeksforGeeks. (2024, June 10). *How to remove text before or after a specific character in Excel.* https://www.geeksforgeeks.org/how-to-remove-text-before-or-after-a-specific-character-in-excel/ 
+
+
+Ottawa CTV News. *This Ottawa ward has the most complaints about rats so far in 2024. Ottawa.* (2024, May 9). https://ottawa.ctvnews.ca/this-ottawa-ward-has-the-most-complaints-about-rats-so-far-in-2024-1.6879854 
